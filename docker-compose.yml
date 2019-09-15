@@ -21,3 +21,9 @@ services:
       MYSQL_ROOT_PASSWORD: 1nf3rn4l
   phpqa:
     image: jakzal/phpqa:php7.1-alpine
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    links:
+      - "database:db"

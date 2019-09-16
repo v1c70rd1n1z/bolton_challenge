@@ -15,9 +15,3 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
     ];
 });
-
-$factory->define(App\Category::class, function (Faker\Generator $faker) {
-    return [
-        'name' => $faker->sentence($nbWords = 4, $variableNbWords = true),
-    ];
-});

@@ -15,11 +15,6 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('category', 'CategoryController@lists');
-$router->get('category/{id}', 'CategoryController@show');
-$router->put('category/{id}', 'CategoryController@update');
-$router->post('category', 'CategoryController@store');
-
 $router->post('nfe/receive', 'ElectronicInvoiceController@receive');
 $router->get('nfe', 'ElectronicInvoiceController@lists');
 $router->get('nfe/{key}', 'ElectronicInvoiceController@show');

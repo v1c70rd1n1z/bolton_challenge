@@ -6,6 +6,9 @@ namespace App\Services;
 use App\Exceptions\ApiClientArquiveiEnvironmentVariableMissingException;
 use App\Exceptions\ApiClientArquiveiException;
 use App\Exceptions\ApiClientArquiveiResponseStructureException;
+use App\Exceptions\ElectronicInvoiceListsException;
+use App\Exceptions\ElectronicInvoiceSaveResponseException;
+use App\Exceptions\ElectronicInvoiceShowException;
 use App\Models\ElectronicInvoice;
 use App\Repositories\ElectronicInvoiceInterface;
 use App\Services\ApiClient\ApiClientArquivei;
@@ -15,6 +18,7 @@ use App\Services\ElectronicInvoiceService\ShowResponseFactory;
 use Illuminate\Support\Collection;
 use Nathanmac\Utilities\Parser\Exceptions\ParserException;
 use Nathanmac\Utilities\Parser\Parser;
+use Exception;
 
 class ElectronicInvoiceService
 {
@@ -29,10 +33,10 @@ class ElectronicInvoiceService
     }
 
     /**
+     * @throws ApiClientArquiveiEnvironmentVariableMissingException
      * @throws ApiClientArquiveiException
      * @throws ApiClientArquiveiResponseStructureException
-     * @throws ParserException
-     * @throws ApiClientArquiveiEnvironmentVariableMissingException
+     * @throws ElectronicInvoiceSaveResponseException
      */
     public function receive()
     {
@@ -40,7 +44,11 @@ class ElectronicInvoiceService
 
         $response = $this->apiClient->receiveNfe();
 
-        $this->saveNfeResponse($response->getData());
+        try {
+            $this->saveNfeResponse($response->getData());
+        } catch (ParserException $exception) {
+            throw new ElectronicInvoiceSaveResponseException();
+        }
     }
 
     /**
@@ -70,10 +78,10 @@ class ElectronicInvoiceService
         $parsed = $parser->xml($xmlContent);
 
         if (isset($parsed['NFe'])) {
-            return (float) $parsed['NFe']['infNFe']['total']['ICMSTot']['vNF'];
+            return (float)$parsed['NFe']['infNFe']['total']['ICMSTot']['vNF'];
         }
 
-        return (float) $parsed['infNFe']['total']['ICMSTot']['vNF'];
+        return (float)$parsed['infNFe']['total']['ICMSTot']['vNF'];
     }
 
     private function getNfeObject(ApiClientArquivei\ReceiveNfeResponseData $nfeResponse)
@@ -87,21 +95,38 @@ class ElectronicInvoiceService
         return $nfeOnDatabase;
     }
 
+    /**
+     * @return array
+     * @throws ElectronicInvoiceListsException
+     */
     public function lists(): array
     {
-        $list = $this->electronicInvoiceRepository->list();
+        try {
+            $list = $this->electronicInvoiceRepository->list();
 
-        $factory = new ListsResponseFactory();
+            $factory = new ListsResponseFactory();
 
-        return $factory->make($list);
+            return $factory->make($list);
+        } catch (Exception $exception) {
+            throw new ElectronicInvoiceListsException();
+        }
     }
 
+    /**
+     * @param $key
+     * @return ShowResponse
+     * @throws ElectronicInvoiceShowException
+     */
     public function show($key): ShowResponse
     {
-        $item = $this->electronicInvoiceRepository->show($key);
+        try {
+            $item = $this->electronicInvoiceRepository->show($key);
 
-        $factory = new ShowResponseFactory();
+            $factory = new ShowResponseFactory();
 
-        return $factory->make($item);
+            return $factory->make($item);
+        } catch (Exception $exception) {
+            throw new ElectronicInvoiceShowException();
+        }
     }
 }

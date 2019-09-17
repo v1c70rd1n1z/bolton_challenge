@@ -17,6 +17,6 @@ class ApiClientArquiveiException extends Exception
 
     public function render()
     {
-        return abort(Response::HTTP_UNPROCESSABLE_ENTITY, $this->getMessage());
+        return abort(Response::HTTP_BAD_REQUEST, $this->getMessage());
     }
 }

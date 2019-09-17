@@ -6,9 +6,9 @@ namespace App\Exceptions;
 use Illuminate\Http\Response;
 use Exception;
 
-class ApiClientArquiveiEnvironmentVariableMissingException extends Exception
+class ElectronicInvoiceShowException extends Exception
 {
-    protected $message = 'One of ArquiveiApi environment variables is missing.';
+    protected $message = 'Something went wrong when trying to to get an specific Electronic Invoice Response by a given key.';
 
     public function report()
     {

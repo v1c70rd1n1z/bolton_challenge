@@ -18,6 +18,15 @@
                 "responses": {
                     "204": {
                         "description": "All NFes were successfully imported"
+                    },
+                    "500": {
+                        "description": "One of ArquiveiApi environment variables is missing."
+                    },
+                    "400": {
+                        "description": "Something went wrong on ApiClientArquivei."
+                    },
+                    "422": {
+                        "description": "Something went wrong when trying to parse the structure. Something went wrong when trying to save Electronic Invoice."
                     }
                 }
             }
@@ -31,6 +40,9 @@
                 "responses": {
                     "200": {
                         "description": "Retrieves the imported keys"
+                    },
+                    "500": {
+                        "description": "Something went wrong when trying to parse Electronic Invoice list."
                     }
                 }
             }
@@ -55,6 +67,9 @@
                 "responses": {
                     "200": {
                         "description": "Retrieves the imported keys"
+                    },
+                    "500": {
+                        "description": "Something went wrong when trying to to get an specific Electronic Invoice Response by a given key."
                     }
                 }
             }

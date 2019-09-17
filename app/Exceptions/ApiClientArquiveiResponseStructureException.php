@@ -8,7 +8,7 @@ use Exception;
 
 class ApiClientArquiveiResponseStructureException extends Exception
 {
-    protected $message = 'Something went wrong on ApiClientArquivei.';
+    protected $message = 'Something went wrong when trying to parse the structure.';
 
     public function report()
     {

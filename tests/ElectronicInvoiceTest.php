@@ -1,28 +1,33 @@
 <?php
 
+use App\Models\ElectronicInvoice;
+use App\Services\ElectronicInvoiceService\ShowResponse;
 use Illuminate\Http\Response;
 
 class ElectronicInvoiceTest extends TestCase
 {
-    public function testReceiveNfe()
+    public function testReceiveElectronicInvoice()
     {
-        $header = [
-            'Content-Type'=>'application/json',
-            'x-api-id'=>'f96ae22f7c5d74fa4d78e764563d52811570588e',
-            'x-api-key'=>'cc79ee9464257c9e1901703e04ac9f86b0f387c2'
-        ];
-        $this->post('nfe/receive',[],$header);
+        $this->post('nfe/receive');
         $this->seeStatusCode(Response::HTTP_NO_CONTENT);
     }
 
-    public function testShowCategory()
+    public function testListElectronicInvoice()
     {
-        $nfe = \App\ElectronicInvoice::first();
+        $nfe = ElectronicInvoice::first();
         $this->get('nfe/'.$nfe->key);
         $this->seeStatusCode(Response::HTTP_OK);
+        $showResponse = new ShowResponse($nfe->key, $nfe->value);
         $this->seeJsonContains([
-            'key' => $nfe->key,
-            'xml' => $nfe->xml,
+            'key' => $showResponse->getKey(),
+            'value' => $showResponse->getValue(),
         ]);
+    }
+
+    public function testShowElectronicInvoice()
+    {
+        $this->get('nfe/');
+        $this->seeStatusCode(Response::HTTP_OK);
+        $this->seeJsonStructure([['key']]);
     }
 }

@@ -31,6 +31,7 @@ following features:
   * Layer Architecture
   * Unit tests
   * Exception Handling
+  * Log Handgling
   * Design Patterns
   * Swagger
   

@@ -16,6 +16,22 @@ class ShowResponse
         $this->value = 'R$ ' . number_format($value, 2, ',', '.');
     }
 
+    /**
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
     public function toArray()
     {
         return get_object_vars($this);

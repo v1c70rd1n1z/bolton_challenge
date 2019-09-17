@@ -6,9 +6,9 @@ namespace App\Exceptions;
 use Illuminate\Http\Response;
 use Exception;
 
-class ApiClientArquiveiEnvironmentVariableMissingException extends Exception
+class ElectronicInvoiceSaveResponseException extends Exception
 {
-    protected $message = 'One of ArquiveiApi environment variables is missing.';
+    protected $message = 'Something went wrong when trying to save Electronic Invoice.';
 
     public function report()
     {
@@ -17,6 +17,6 @@ class ApiClientArquiveiEnvironmentVariableMissingException extends Exception
 
     public function render()
     {
-        return abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->getMessage());
+        return abort(Response::HTTP_UNPROCESSABLE_ENTITY, $this->getMessage());
     }
 }

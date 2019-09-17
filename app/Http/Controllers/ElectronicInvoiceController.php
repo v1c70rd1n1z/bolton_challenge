@@ -3,8 +3,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ApiClientArquiveiEnvironmentVariableMissingException;
+use App\Exceptions\ApiClientArquiveiException;
+use App\Exceptions\ApiClientArquiveiResponseStructureException;
+use App\Exceptions\ElectronicInvoiceListsException;
+use App\Exceptions\ElectronicInvoiceSaveResponseException;
+use App\Exceptions\ElectronicInvoiceShowException;
 use App\Services\ElectronicInvoiceService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Laravel\Lumen\Http\ResponseFactory;
 
 class ElectronicInvoiceController
 {
@@ -25,12 +33,24 @@ class ElectronicInvoiceController
      *         response="204",
      *         description="All NFes were successfully imported"
      *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="One of ArquiveiApi environment variables is missing."
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Something went wrong on ApiClientArquivei."
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Something went wrong when trying to parse the structure. Something went wrong when trying to save Electronic Invoice."
+     *     ),
      * )
-     * @return Response|\Laravel\Lumen\Http\ResponseFactory
-     * @throws \App\Exceptions\ApiClientArquiveiEnvironmentVariableMissingException
-     * @throws \App\Exceptions\ApiClientArquiveiException
-     * @throws \App\Exceptions\ApiClientArquiveiResponseStructureException
-     * @throws \Nathanmac\Utilities\Parser\Exceptions\ParserException
+     * @return Response|ResponseFactory
+     * @throws ApiClientArquiveiEnvironmentVariableMissingException
+     * @throws ApiClientArquiveiException
+     * @throws ApiClientArquiveiResponseStructureException
+     * @throws ElectronicInvoiceSaveResponseException
      */
     public function receive()
     {
@@ -40,7 +60,6 @@ class ElectronicInvoiceController
     }
 
     /**
-     *
      * @OA\Get(
      *     path="/nfe",
      *     operationId="/nfe",
@@ -49,8 +68,13 @@ class ElectronicInvoiceController
      *         response="200",
      *         description="Retrieves the imported keys"
      *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Something went wrong when trying to parse Electronic Invoice list."
+     *     ),
      * )
-     * @return Response|\Laravel\Lumen\Http\ResponseFactory
+     * @return Response|ResponseFactory
+     * @throws ElectronicInvoiceListsException
      */
     public function lists()
     {
@@ -75,9 +99,14 @@ class ElectronicInvoiceController
      *         response="200",
      *         description="Retrieves the imported keys"
      *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Something went wrong when trying to to get an specific Electronic Invoice Response by a given key."
+     *     ),
      * )
      * @param $key
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws ElectronicInvoiceShowException
      */
     public function show($key)
     {

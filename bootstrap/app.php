@@ -82,7 +82,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register('Nathanmac\Utilities\Parser\ParserServiceProvider');
-class_alias('Nathanmac\Utilities\Parser\Facades\Parser', 'Parser');
+//class_alias('Nathanmac\Utilities\Parser\Facades\Parser', 'Parser');
 $app->register(\SwaggerLume\ServiceProvider::class);
 /*
 |--------------------------------------------------------------------------

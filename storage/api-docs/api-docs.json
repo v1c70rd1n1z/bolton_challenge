@@ -1,0 +1,63 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Bolton Challenge",
+        "contact": {
+            "name": "Victor Diniz",
+            "email": "victor.diniz.ti@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/nfe/receive": {
+            "post": {
+                "tags": [
+                    "NFe - Receive"
+                ],
+                "operationId": "/nfe/receive",
+                "responses": {
+                    "204": {
+                        "description": "All NFes were successfully imported"
+                    }
+                }
+            }
+        },
+        "/nfe": {
+            "get": {
+                "tags": [
+                    "NFe - List"
+                ],
+                "operationId": "/nfe",
+                "responses": {
+                    "200": {
+                        "description": "Retrieves the imported keys"
+                    }
+                }
+            }
+        },
+        "/nfe/{key}": {
+            "get": {
+                "tags": [
+                    "NFe - Show"
+                ],
+                "operationId": "/nfe/key",
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "Imported key",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieves the imported keys"
+                    }
+                }
+            }
+        }
+    }
+}

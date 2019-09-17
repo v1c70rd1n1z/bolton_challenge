@@ -3,61 +3,86 @@
 
 namespace App\Http\Controllers;
 
-use App\ElectronicInvoice;
-use GuzzleHttp\Client;
+use App\Services\ElectronicInvoiceService;
 use Illuminate\Http\Response;
 
 class ElectronicInvoiceController
 {
-    public function receive()
+
+    private $electronicInvoiceService;
+
+    public function __construct(ElectronicInvoiceService $electronicInvoiceService)
     {
-        $client = new Client(['base_uri' => 'https://sandbox-api.arquivei.com.br/v1/']);
-        $headers = [
-            'Content-Type' => 'application/json',
-            'x-api-id' => 'f96ae22f7c5d74fa4d78e764563d52811570588e',
-            'x-api-key' => 'cc79ee9464257c9e1901703e04ac9f86b0f387c2',
-        ];
-        $options = ['http_errors' => false, 'headers' => $headers];
-        $response = $client->get('nfe/received', $options);
-        $content = $response->getBody()->getContents();
-
-        $responseObject = json_decode($content);
-
-        if ($responseObject->status->code === Response::HTTP_OK) {
-            foreach ($responseObject->data as $nfeResponse) {
-                $nfe = $this->getNfeObject($nfeResponse);
-
-                $nfe->key = $nfeResponse->access_key;
-                $nfe->xml = base64_decode($nfeResponse->xml);
-
-                $nfe->save();
-            }
-        }
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
-
-    private function getNfeObject($nfeResponse)
-    {
-        $nfeOnDatabase = ElectronicInvoice::where('key', $nfeResponse->access_key)->first();
-
-        if (null === $nfeOnDatabase) {
-            return new ElectronicInvoice();
-        }
-
-        return $nfeOnDatabase;
-    }
-
-    public function lists()
-    {
-        return ElectronicInvoice::all();
+        $this->electronicInvoiceService = $electronicInvoiceService;
     }
 
     /**
-     * @param string $key
-     * @return mixed
+     * @OA\Post(
+     *     path="/nfe/receive",
+     *     operationId="/nfe/receive",
+     *     tags={"NFe - Receive"},
+     *     @OA\Response(
+     *         response="204",
+     *         description="All NFes were successfully imported"
+     *     ),
+     * )
+     * @return Response|\Laravel\Lumen\Http\ResponseFactory
+     * @throws \App\Exceptions\ApiClientArquiveiEnvironmentVariableMissingException
+     * @throws \App\Exceptions\ApiClientArquiveiException
+     * @throws \App\Exceptions\ApiClientArquiveiResponseStructureException
+     * @throws \Nathanmac\Utilities\Parser\Exceptions\ParserException
+     */
+    public function receive()
+    {
+        $this->electronicInvoiceService->receive();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     *
+     * @OA\Get(
+     *     path="/nfe",
+     *     operationId="/nfe",
+     *     tags={"NFe - List"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retrieves the imported keys"
+     *     ),
+     * )
+     * @return Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function lists()
+    {
+        $response = $this->electronicInvoiceService->lists();
+
+        return response($response);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/nfe/{key}",
+     *     operationId="/nfe/key",
+     *     tags={"NFe - Show"},
+     *     @OA\Parameter(
+     *         name="key",
+     *         in="path",
+     *         description="Imported key",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Retrieves the imported keys"
+     *     ),
+     * )
+     * @param $key
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($key)
     {
-        return ElectronicInvoice::where('key', $key)->get();
+        $response = $this->electronicInvoiceService->show($key);
+
+        return response()->json($response->toArray());
     }
 }

@@ -16,7 +16,7 @@ class CreateElectronicInvoicesTable extends Migration
         Schema::create('electronic_invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key',44);
-            $table->longText('xml');
+            $table->float('value', 10, 2);
             $table->timestamps();
         });
     }

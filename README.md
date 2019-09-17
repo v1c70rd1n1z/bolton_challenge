@@ -30,6 +30,9 @@ following features:
   * S.O.L.I.D.
   * Layer Architecture
   * Unit tests
+  * Exception Handling
+  * Design Patterns
+  * Swagger
   
 Keep It Simple, Enjoy! - By Victor Diniz
 

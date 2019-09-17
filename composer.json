@@ -6,8 +6,11 @@
     "type": "project",
     "require": {
         "php": "^7.2",
+        "ext-json": "^1.7",
+        "darkaonline/swagger-lume": "^6.0",
         "guzzlehttp/guzzle": "^6.3",
-        "laravel/lumen-framework": "^6.0"
+        "laravel/lumen-framework": "^6.0",
+        "nathanmac/parser": "^4.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

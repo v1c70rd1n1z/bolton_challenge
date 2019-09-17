@@ -12,7 +12,7 @@ class ElectronicInvoiceTest extends TestCase
         $this->seeStatusCode(Response::HTTP_NO_CONTENT);
     }
 
-    public function testListElectronicInvoice()
+    public function testShowElectronicInvoice()
     {
         $nfe = ElectronicInvoice::first();
         $this->get('nfe/'.$nfe->key);
@@ -24,7 +24,7 @@ class ElectronicInvoiceTest extends TestCase
         ]);
     }
 
-    public function testShowElectronicInvoice()
+    public function testListElectronicInvoice()
     {
         $this->get('nfe/');
         $this->seeStatusCode(Response::HTTP_OK);

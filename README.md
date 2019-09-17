@@ -29,7 +29,7 @@ following features:
   * Automated setup (make)
   * S.O.L.I.D.
   * Layer Architecture
-  * Unit tests
+  * Integration tests
   * Exception Handling
   * Log Handgling
   * Design Patterns
